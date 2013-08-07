@@ -12,6 +12,6 @@ sudo chmod 777 $INST_PATH1
 echo done.
 
 echo Installing to $INST_PATH2 ...
-sudo cp ./mkdevdir $INST_PATH2
+sudo cp ./mkmkfl $INST_PATH2
 sudo chmod 777 $INST_PATH2
 echo done.

@@ -74,6 +74,18 @@ echo 'TARGET_DIR_X64=$(BIN_DIR_X64)' >> ./Makefile
 echo 'TARGET_PATH_X64=$(TARGET_DIR_X64)/$(TARGET_NAME)' >> ./Makefile
 echo "" >> ./Makefile
 
+echo 'CC=gcc' >> ./Makefile
+echo 'CFLAGS=-Wall -Werror -Wextra -pedantic -ansi' >> ./Makefile
+echo 'CL=$(CC) $(CFLAGS) -c -I$(INC_DIR)' >> ./Makefile
+echo 'LNK=$(CC) $(CFLAGS) -I$(INC_DIR)' >> ./Makefile
+echo '$(SRC_DIR)/main.o:' >> ./Makefile
+echo '	$(CL) $(SRC_DIR)/main.c -o $(OBJ_DIR_X86)/main.o' >> ./Makefile
+
+echo '$(TARGET_PATH_X86): $(SRC_DIR)/main.o' >> ./Makefile
+echo '	$(LNK) $(OBJ_DIR_X86)/main.o -o $(BIN_DIR_X86)/$(TARGET_NAME)' >> ./Makefile
+
+
+echo '' >> ./Makefile
 echo "all: all_x86 all_x64" >> ./Makefile
 echo "" >> ./Makefile
 echo "clean_x86:" >> ./Makefile
@@ -91,6 +103,6 @@ echo '	rm -rf $(TARGET_PATH_X64)' >> ./Makefile
 echo ".PHONY: mrproper_x86 mrproper_x64 clean_x86 clean_x64" >> ./Makefile
 echo "" >> ./Makefile
 echo '$(TARGET_PATH_X86):' >> ./Makefile
-echo '$(TARGET_PATH_X64):' >> ./Makefile
+echo '$(TARGET_PATH_X64): $(TARGET_PATH_X86)' >> ./Makefile
 echo 'all_x86: clean_x86 mrproper_x86 $(TARGET_PATH_X86)' >> ./Makefile
 echo 'all_x64: clean_x64 mrproper_x64 $(TARGET_PATH_X64)' >> ./Makefile

@@ -1,0 +1,59 @@
+#!/bin/bash
+
+if [ $# -ge 1 ]; then
+	echo "Too many arguments supplied, expected 1"
+	exit -1
+fi
+
+if [ $# -ne 1 ]; then 
+	 CD="."
+else 
+	 CD=$1
+fi
+
+FPATH=$CD/Makefile
+echo Creating makefile $FPATH
+
+echo "ARCH32=x86" > "$FPATH"
+echo "ARCH64=x64" > "$FPATH"
+echo "INC_DIR=$CD/inc" >> "$FPATH"
+echo "SRC_DIR=$CD/src" >> "$FPATH"
+echo 'BIN_DIR=$CD/bin' >> "$FPATH"
+echo 'BIN_DIR_X86=$(BIN_DIR)/$(ARCH32)' >> "$FPATH"
+echo 'BIN_DIR_X64=$(BIN_DIR)/$(ARCH64)' >> "$FPATH"
+echo 'OBJ_DIR=$CD/obj' >> "$FPATH"
+echo 'OBJ_DIR_X86=$(OBJ_DIR)/$(ARCH32)' >> "$FPATH"
+echo 'OBJ_DIR_X64=$(OBJ_DIR)/$(ARCH64)' >> "$FPATH"
+echo '' >> "$FPATH"
+echo 'TARGET_NAME=test' >> "$FPATH"
+echo 'TARGET_DIR_X86=$(BIN_DIR_X86)' >> "$FPATH"
+echo 'TARGET_PATH_X86=$(TARGET_DIR_X86)/$(TARGET_NAME)' >> "$FPATH"
+echo 'TARGET_DIR_X64=$(BIN_DIR_X64)' >> "$FPATH"
+echo 'TARGET_PATH_X64=$(TARGET_DIR_X64)/$(TARGET_NAME)' >> "$FPATH"
+echo '' >> "$FPATH"
+echo 'all: all_x86 all_x64' >> "$FPATH"
+echo '' >> "$FPATH"
+echo 'clean_x86:' >> "$FPATH"
+echo '    rm -rf $(OBJ_DIR_X86)/*.o' >> "$FPATH"
+echo 'mrproper_x86:' >> "$FPATH"
+echo '    rm -rf $(TARGET_PATH_X86)' >> "$FPATH"
+echo 'clean_x64:' >> "$FPATH"
+echo '    rm -rf $(OBJ_DIR_X64)/*.o' >> "$FPATH"
+echo 'mrproper_x64:' >> "$FPATH"
+echo '    rm -rf $(TARGET_PATH_X64)' >> "$FPATH"
+echo '.PHONY: mrproper_x86 mrproper_x64 clean_x86 clean_x64' >> "$FPATH"
+echo '' >> "$FPATH"
+echo 'CC=gcc' >> "$FPATH"
+echo 'CFLAGS=-Wall -Werror -Wextra -pedantic -ansi' >> "$FPATH"
+echo '' >> "$FPATH"
+echo '$(SRC_DIR)/main.o:' >> "$FPATH"
+echo '    $(CC) $(CFLAGS) -c -I$(INC_DIR) $(SRC_DIR)/main.c -o $(OBJ_DIR_X86)/main.o' >> "$FPATH"
+echo '' >> "$FPATH"
+echo '$(TARGET_PATH_X86): $(SRC_DIR)/main.o' >> "$FPATH"
+echo '    $(CC) $(CFLAGS) -I$(INC_DIR) $(OBJ_DIR_X86)/main.o -o $(BIN_DIR_X86)/main' >> "$FPATH"
+echo '' >> "$FPATH"
+echo '$(TARGET_PATH_X64): $(TARGET_PATH_X86)' >> "$FPATH"
+echo '' >> "$FPATH"
+echo 'all_x86: clean_x86 mrproper_x86 $(TARGET_PATH_X86)' >> "$FPATH"
+echo 'all_x64: clean_x64 mrproper_x64 $(TARGET_PATH_X64)' >> "$FPATH"
+

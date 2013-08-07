@@ -1,10 +1,17 @@
 #!/bin/bash
 
-INST_NAME=mkdevdir
+INST_NAME1=mkdevdir
+INST_NAME2=mkmkfl
 INST_DIR=/usr/bin
-INST_PATH=$INST_DIR/$INST_NAME
+INST_PATH1=$INST_DIR/$INST_NAME1
+INST_PATH2=$INST_DIR/$INST_NAME2
 
-echo Installing to $INST_PATH ...
-sudo cp ./mkdevdir $INST_PATH
-sudo chmod 777 $INST_PATH
+echo Installing to $INST_PATH1 ...
+sudo cp ./mkdevdir $INST_PATH1
+sudo chmod 777 $INST_PATH1
+echo done.
+
+echo Installing to $INST_PATH2 ...
+sudo cp ./mkdevdir $INST_PATH2
+sudo chmod 777 $INST_PATH2
 echo done.

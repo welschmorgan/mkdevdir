@@ -1,108 +1,38 @@
 #!/bin/bash
 
+if [ $# -ne 1 ];
+then CD="."
+else CD=$1
+fi
+
+echo "Current Dir: $CD"
+
 ARCH32=x86
 ARCH64=x64
 
-BIN=./bin
+BIN=$CD/bin
 BIN32=$BIN/$ARCH32
 BIN64=$BIN/$ARCH64
 
-OBJ=./obj
+OBJ=$CD/obj
 OBJ32=$OBJ/$ARCH32
 OBJ64=$OBJ/$ARCH64
 
-SRC=./src
-INC=./inc
+SRC=$CD/src
+INC=$CD/inc
 
-echo Creating source dir
-mkdir -p $SRC
-echo Creating include dir
-mkdir -p $INC
-echo Creating object32 dir
-mkdir -p $OBJ32
-echo Creating object64 dir
-mkdir -p $OBJ64
-echo Creating binary32 dir
-mkdir -p $BIN32
-echo Creating binary64 dir
-mkdir -p $BIN64
+function create_dir
+{
+	echo Creating "$1" dir
+	mkdir -p "$1"	
+	chmod +rwx "$1"
+}
 
-echo Creating Makefile
-touch ./Makefile
+create_dir "$SRC"
+create_dir "$INC"
+create_dir "$OBJ32"
+create_dir "$OBJ64"
+create_dir "$BIN32"
+create_dir "$BIN64"
 
-echo Changing permissions for bin dir
-chmod +rwx $BIN
-echo Changing permissions for bin32 dir
-chmod +rwx $BIN32
-echo Changing permissions for bin64 dir
-chmod +rwx $BIN64
-
-echo Changing permissions for obj dir
-chmod +rwx $OBJ
-echo Changing permissions for obj32 dir
-chmod +rwx $OBJ32
-echo Changing permissions for obj64 dir
-chmod +rwx $OBJ64
-
-echo Changing permissions for inc dir
-chmod +rwx $INC
-echo Changing permissions for src dir
-chmod +rwx $SRC
-
-echo Creating Makefile
-touch ./Makefile
-chmod +rwx ./Makefile
-
-read -re -i "app" -p "Choose Target Name: " TARGET
-
-echo "ARCH32=$ARCH32" > ./Makefile
-echo "ARCH64=$ARCH64" >> ./Makefile
-
-echo "INC_DIR=$INC" >> ./Makefile
-echo "SRC_DIR=$SRC" >> ./Makefile
-echo "BIN_DIR=$BIN" >> ./Makefile
-echo 'BIN_DIR_X86=$(BIN_DIR)/$(ARCH32)' >> ./Makefile
-echo 'BIN_DIR_X64=$(BIN_DIR)/$(ARCH64)' >> ./Makefile
-echo "OBJ_DIR=$OBJ" >> ./Makefile
-echo 'OBJ_DIR_X86=$(OBJ_DIR)/$(ARCH32)' >> ./Makefile
-echo 'OBJ_DIR_X64=$(OBJ_DIR)/$(ARCH64)' >> ./Makefile
-echo "" >> ./Makefile
-echo "TARGET_NAME=$TARGET" >> ./Makefile
-echo 'TARGET_DIR_X86=$(BIN_DIR_X86)' >> ./Makefile
-echo 'TARGET_PATH_X86=$(TARGET_DIR_X86)/$(TARGET_NAME)' >> ./Makefile
-echo 'TARGET_DIR_X64=$(BIN_DIR_X64)' >> ./Makefile
-echo 'TARGET_PATH_X64=$(TARGET_DIR_X64)/$(TARGET_NAME)' >> ./Makefile
-echo "" >> ./Makefile
-
-echo 'CC=gcc' >> ./Makefile
-echo 'CFLAGS=-Wall -Werror -Wextra -pedantic -ansi' >> ./Makefile
-echo 'CL=$(CC) $(CFLAGS) -c -I$(INC_DIR)' >> ./Makefile
-echo 'LNK=$(CC) $(CFLAGS) -I$(INC_DIR)' >> ./Makefile
-echo '$(SRC_DIR)/main.o:' >> ./Makefile
-echo '	$(CL) $(SRC_DIR)/main.c -o $(OBJ_DIR_X86)/main.o' >> ./Makefile
-
-echo '$(TARGET_PATH_X86): $(SRC_DIR)/main.o' >> ./Makefile
-echo '	$(LNK) $(OBJ_DIR_X86)/main.o -o $(BIN_DIR_X86)/$(TARGET_NAME)' >> ./Makefile
-
-
-echo '' >> ./Makefile
-echo "all: all_x86 all_x64" >> ./Makefile
-echo "" >> ./Makefile
-echo "clean_x86:" >> ./Makefile
-echo '	rm -rf $(OBJ_DIR_X86)/*.o' >> ./Makefile
-
-echo "mrproper_x86:" >> ./Makefile
-echo '	rm -rf $(TARGET_PATH_X86)' >> ./Makefile
-
-echo "clean_x64:" >> ./Makefile
-echo '	rm -rf $(OBJ_DIR_X64)/*.o' >> ./Makefile
-
-echo "mrproper_x64:" >> ./Makefile
-echo '	rm -rf $(TARGET_PATH_X64)' >> ./Makefile
-
-echo ".PHONY: mrproper_x86 mrproper_x64 clean_x86 clean_x64" >> ./Makefile
-echo "" >> ./Makefile
-echo '$(TARGET_PATH_X86):' >> ./Makefile
-echo '$(TARGET_PATH_X64): $(TARGET_PATH_X86)' >> ./Makefile
-echo 'all_x86: clean_x86 mrproper_x86 $(TARGET_PATH_X86)' >> ./Makefile
-echo 'all_x64: clean_x64 mrproper_x64 $(TARGET_PATH_X64)' >> ./Makefile
+./mkmkfl

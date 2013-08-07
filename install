@@ -1,3 +1,10 @@
 #!/bin/bash
 
-sudo cp mkdevdir /usr/bin/
+INST_NAME=mkdevdir
+INST_DIR=/usr/bin
+INST_PATH=$INST_DIR/$INST_NAME
+
+echo Installing to $INST_PATH ...
+sudo cp mkdevdir $INST_PATH
+sudo chmod +rwx $INST_PATH
+echo Done.

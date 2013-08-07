@@ -55,14 +55,17 @@ chmod +rwx ./Makefile
 
 read -re -i "app" -p "Choose Target Name: " TARGET
 
-echo "INC_DIR=$INC" > ./Makefile
+echo "ARCH32=$ARCH32" > ./Makefile
+echo "ARCH64=$ARCH64" >> ./Makefile
+
+echo "INC_DIR=$INC" >> ./Makefile
 echo "SRC_DIR=$SRC" >> ./Makefile
 echo "BIN_DIR=$BIN" >> ./Makefile
-echo 'BIN_DIR_X86=$(BIN_DIR)/$ARCH32' >> ./Makefile
-echo 'BIN_DIR_X64=$(BIN_DIR)/$ARCH64' >> ./Makefile
+echo 'BIN_DIR_X86=$(BIN_DIR)/$(ARCH32)' >> ./Makefile
+echo 'BIN_DIR_X64=$(BIN_DIR)/$(ARCH64)' >> ./Makefile
 echo "OBJ_DIR=$OBJ" >> ./Makefile
-echo 'OBJ_DIR_X86=$(OBJ_DIR)/$ARCH32' >> ./Makefile
-echo 'OBJ_DIR_X64=$(OBJ_DIR)/$ARCH64' >> ./Makefile
+echo 'OBJ_DIR_X86=$(OBJ_DIR)/$(ARCH32)' >> ./Makefile
+echo 'OBJ_DIR_X64=$(OBJ_DIR)/$(ARCH64)' >> ./Makefile
 echo "" >> ./Makefile
 echo "TARGET_NAME=$TARGET" >> ./Makefile
 echo 'TARGET_DIR_X86=$(BIN_DIR_X86)' >> ./Makefile
@@ -71,17 +74,19 @@ echo 'TARGET_DIR_X64=$(BIN_DIR_X64)' >> ./Makefile
 echo 'TARGET_PATH_X64=$(TARGET_DIR_X64)/$(TARGET_NAME)' >> ./Makefile
 echo "" >> ./Makefile
 
+echo "all: all_x86 all_x64" >> ./Makefile
+echo "" >> ./Makefile
 echo "clean_x86:" >> ./Makefile
-echo '	rm $(OBJ_DIR_X86)/*.o' >> ./Makefile
+echo '	rm -rf $(OBJ_DIR_X86)/*.o' >> ./Makefile
 
 echo "mrproper_x86:" >> ./Makefile
-echo '	rm $(TARGET_PATH_X86)' >> ./Makefile
+echo '	rm -rf $(TARGET_PATH_X86)' >> ./Makefile
 
 echo "clean_x64:" >> ./Makefile
-echo '	rm $(OBJ_DIR_X64)/*.o' >> ./Makefile
+echo '	rm -rf $(OBJ_DIR_X64)/*.o' >> ./Makefile
 
 echo "mrproper_x64:" >> ./Makefile
-echo '	rm $(TARGET_PATH_X64)' >> ./Makefile
+echo '	rm -rf $(TARGET_PATH_X64)' >> ./Makefile
 
 echo ".PHONY: mrproper_x86 mrproper_x64 clean_x86 clean_x64" >> ./Makefile
 echo "" >> ./Makefile
@@ -89,4 +94,3 @@ echo '$(TARGET_PATH_X86):' >> ./Makefile
 echo '$(TARGET_PATH_X64):' >> ./Makefile
 echo 'all_x86: clean_x86 mrproper_x86 $(TARGET_PATH_X86)' >> ./Makefile
 echo 'all_x64: clean_x64 mrproper_x64 $(TARGET_PATH_X64)' >> ./Makefile
-echo "all: all_x86 all_x64" >> ./Makefile

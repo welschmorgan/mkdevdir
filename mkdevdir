@@ -35,4 +35,4 @@ create_dir "$OBJ64"
 create_dir "$BIN32"
 create_dir "$BIN64"
 
-mkmkfl
+mkmkfl "$CD"
